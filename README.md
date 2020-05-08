@@ -110,49 +110,49 @@ https://www.example.com/path/to/live2d-widget/
 Thanks to [BrowserStack](https://www.browserstack.com/) for providing the infrastructure that allows us to test in real browsers!
 
 代码自这篇博文魔改而来：  
-https://www.fghrsh.net/post/123.html
+<https://www.fghrsh.net/post/123.html>
 
 点击看板娘的纸飞机按钮时，会出现一个彩蛋，这来自于 [WebsiteAsteroids](http://www.websiteasteroids.com)。
 
 ## 更多 More
 
 更多内容可以参考：  
-https://imjad.cn/archives/lab/add-dynamic-poster-girl-with-live2d-to-your-blog-02  
-https://github.com/xiazeyu/live2d-widget.js  
-https://github.com/summerscar/live2dDemo
+<https://imjad.cn/archives/lab/add-dynamic-poster-girl-with-live2d-to-your-blog-02>  
+<https://github.com/xiazeyu/live2d-widget.js>  
+<https://github.com/summerscar/live2dDemo>
 
 还可以自行搭建后端 API，并增加模型（需要修改的内容比较多，此处不再赘述）：  
-https://github.com/fghrsh/live2d_api  
-https://github.com/xiazeyu/live2d-widget-models  
-https://github.com/xiaoski/live2d_models_collection
+<https://github.com/fghrsh/live2d_api>  
+<https://github.com/xiazeyu/live2d-widget-models>  
+<https://github.com/xiaoski/live2d_models_collection>
 
 除此之外，还有桌面版本：  
-https://github.com/amorist/platelet  
-https://github.com/akiroz/Live2D-Widget
+<https://github.com/amorist/platelet>  
+<https://github.com/akiroz/Live2D-Widget>
 
 ## 许可证 License
 
 Released under the GNU General Public License v3  
-http://www.gnu.org/licenses/gpl-3.0.html
+<http://www.gnu.org/licenses/gpl-3.0.html>
 
 本仓库中涉及的所有 Live2D 模型、图片、动作数据等版权均属于其原作者，仅供研究学习，不得用于商业用途。
 
 Live2D 官方网站：  
-https://www.live2d.com/en/  
-https://live2d.github.io
+<https://www.live2d.com/en/>  
+<https://live2d.github.io>
 
 Live2D Cubism Core は Live2D Proprietary Software License で提供しています。  
-https://www.live2d.com/eula/live2d-proprietary-software-license-agreement_en.html  
+<https://www.live2d.com/eula/live2d-proprietary-software-license-agreement_en.html>  
 Live2D Cubism Components は Live2D Open Software License で提供しています。  
-http://www.live2d.com/eula/live2d-open-software-license-agreement_en.html
+<http://www.live2d.com/eula/live2d-open-software-license-agreement_en.html>
 
 > The terms and conditions do prohibit modification, but obfuscating in `live2d.min.js` would not be considered illegal modification.
 
-https://community.live2d.com/discussion/140/webgl-developer-licence-and-javascript-question
+<https://community.live2d.com/discussion/140/webgl-developer-licence-and-javascript-question>
 
 ## 更新 Update
 
 2018年10月31日，由 fghrsh 提供的原 API 停用，请更新至新地址。参考文章：  
-https://www.fghrsh.net/post/170.html
+<https://www.fghrsh.net/post/170.html>
 
 2020年1月1日起，本项目不再依赖于 jQuery。
