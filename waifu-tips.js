@@ -3,8 +3,43 @@
  * https://github.com/stevenjoezhang/live2d-widget
  */
 
+window.live2d_settings = Array(); /*
+
+    く__,.ヘヽ.　　　　/　,ー､ 〉
+    　　　　　＼ ', !-─‐-i　/　/´
+    　　　 　 ／｀ｰ'　　　 L/／｀ヽ､            Live2D 看板娘 参数设置
+    　　 　 /　 ／,　 /|　 ,　 ,　　　 ',                                           Version 1.4.2
+    　　　ｲ 　/ /-‐/　ｉ　L_ ﾊ ヽ!　 i                            Update 2018.11.12
+    　　　 ﾚ ﾍ 7ｲ｀ﾄ　 ﾚ'ｧ-ﾄ､!ハ|　 |  
+    　　　　 !,/7 '0'　　 ´0iソ| 　 |　　　
+    　　　　 |.从"　　_　　 ,,,, / |./ 　 |             网页添加 Live2D 看板娘
+    　　　　 ﾚ'| i＞.､,,__　_,.イ / 　.i 　|                    https://www.fghrsh.net/post/123.html
+    　　　　　 ﾚ'| | / k_７_/ﾚ'ヽ,　ﾊ.　|           
+    　　　　　　 | |/i 〈|/　 i　,.ﾍ |　i　|    Thanks
+    　　　　　　.|/ /　ｉ： 　 ﾍ!　　＼　|          journey-ad / https://github.com/journey-ad/live2d_src
+    　　　 　 　 kヽ>､ﾊ 　 _,.ﾍ､ 　 /､!            xiazeyu / https://github.com/xiazeyu/live2d-widget.js
+    　　　　　　 !'〈//｀Ｔ´', ＼ ｀'7'ｰr'          Live2d Cubism SDK WebGL 2.1 Projrct & All model authors.
+    　　　　　　 ﾚ'ヽL__|___i,___,ンﾚ|ノ
+    　　　　　 　　　ﾄ-,/　|___./
+    　　　　　 　　　'ｰ'　　!_,.:*********************************************************************************/
+	
+live2d_settings['modelTexturesRandMode']= 'switch';     // 材质切换，可选 'rand'(随机), 'switch'(顺序)
+
+live2d_settings['waifuDraggable']       = 'unlimited';  // 拖拽样式，例如 'disable'(禁用), 'axis-x'(只能水平拖拽), 'unlimited'(自由拖拽)
+live2d_settings['waifuDraggableRevert'] = true;         // 松开鼠标还原拖拽位置，可选 true(真), false(假)
+
+function randomSelection(obj) {
+	obj.id = Math.floor(Math.random() * obj.length);
+	return Array.isArray(obj) ? obj[obj.id] : obj;
+}
+function switchSelection(obj) {
+	let id = obj.id || 0;
+	obj.id = ((id + 1) >= obj.length) ? 0 : id + 1;
+	return Array.isArray(obj) ? obj[obj.id] : obj;
+}
+
 function loadWidget(config) {
-	let { waifuPath, apiPath, cdnPath } = config;
+	let { waifuPath, apiPath, cdnPath, listPath } = config;
 	let useCDN = false, modelList;
 	if (typeof cdnPath === "string") {
 		useCDN = true;
@@ -31,9 +66,6 @@ function loadWidget(config) {
 		document.getElementById("waifu").style.bottom = 0;
 	}, 0);
 
-	function randomSelection(obj) {
-		return Array.isArray(obj) ? obj[Math.floor(Math.random() * obj.length)] : obj;
-	}
 	// 检测用户活动状态，并在空闲时显示消息
 	let userAction = false,
 		userActionTimer,
@@ -53,6 +85,15 @@ function loadWidget(config) {
 		}
 	}, 1000);
 
+    // 预加载waifuPath
+	let rresult;
+	fetch(waifuPath)
+		.then(response => response.json())
+		.then(result => {
+			rresult = result;
+			initModel();
+		});
+
 	(function registerEventListener() {
 		document.querySelector("#waifu-tool .fa-comment").addEventListener("click", showHitokoto);
 		document.querySelector("#waifu-tool .fa-paper-plane").addEventListener("click", () => {
@@ -66,7 +107,7 @@ function loadWidget(config) {
 			}
 		});
 		document.querySelector("#waifu-tool .fa-user-circle").addEventListener("click", loadOtherModel);
-		document.querySelector("#waifu-tool .fa-street-view").addEventListener("click", loadRandModel);
+		document.querySelector("#waifu-tool .fa-street-view").addEventListener("click", loadRandTextures);
 		document.querySelector("#waifu-tool .fa-camera-retro").addEventListener("click", () => {
 			showMessage("照好了嘛，是不是很可爱呢？", 6000, 9);
 			Live2D.captureName = "photo.png";
@@ -153,7 +194,15 @@ function loadWidget(config) {
 		}, timeout);
 	}
 
-	(function initModel() {
+    function loadJQSetting() {
+        try {
+            if (live2d_settings.waifuDraggable == 'axis-x') $("#waifu").draggable({ axis: "x", revert: live2d_settings.waifuDraggableRevert });
+            else if (live2d_settings.waifuDraggable == 'unlimited') $("#waifu").draggable({ revert: live2d_settings.waifuDraggableRevert });
+            else $("#waifu").css("transition", 'all .3s ease-in-out');
+        } catch(err) { console.log('[Error] JQuery UI is not defined.') }
+    }
+	
+	function initModel() {
 		let modelId = localStorage.getItem("modelId"),
 			modelTexturesId = localStorage.getItem("modelTexturesId");
 		if (modelId === null) {
@@ -162,43 +211,41 @@ function loadWidget(config) {
 			modelTexturesId = 53; // 材质 ID
 		}
 		loadModel(modelId, modelTexturesId);
-		fetch(waifuPath)
-			.then(response => response.json())
-			.then(result => {
-				window.addEventListener("mouseover", event => {
-					for (let tips of result.mouseover) {
-						if (!event.target.matches(tips.selector)) continue;
-						let text = randomSelection(tips.text);
-						text = text.replace("{text}", event.target.innerText);
-						showMessage(text, 4000, 8);
-						return;
-					}
-				});
-				window.addEventListener("click", event => {
-					for (let tips of result.click) {
-						if (!event.target.matches(tips.selector)) continue;
-						let text = randomSelection(tips.text);
-						text = text.replace("{text}", event.target.innerText);
-						showMessage(text, 4000, 8);
-						return;
-					}
-				});
-				result.seasons.forEach(tips => {
-					let now = new Date(),
-						after = tips.date.split("-")[0],
-						before = tips.date.split("-")[1] || after;
-					if ((after.split("/")[0] <= now.getMonth() + 1 && now.getMonth() + 1 <= before.split("/")[0]) && (after.split("/")[1] <= now.getDate() && now.getDate() <= before.split("/")[1])) {
-						let text = randomSelection(tips.text);
-						text = text.replace("{year}", now.getFullYear());
-						//showMessage(text, 7000, true);
-						messageArray.push(text);
-					}
-				});
-			});
-	})();
+		loadJQSetting();
+		
+		window.addEventListener("mouseover", event => {
+			for (let tips of rresult.mouseover) {
+				if (!event.target.matches(tips.selector)) continue;
+				let text = randomSelection(tips.text);
+				text = text.replace("{text}", event.target.innerText);
+				showMessage(text, 4000, 8);
+				return;
+			}
+		});
+		window.addEventListener("click", event => {
+			for (let tips of rresult.click) {
+				if (!event.target.matches(tips.selector)) continue;
+				let text = randomSelection(tips.text);
+				text = text.replace("{text}", event.target.innerText);
+				showMessage(text, 4000, 8);
+				return;
+			}
+		});
+		rresult.seasons.forEach(tips => {
+			let now = new Date(),
+				after = tips.date.split("-")[0],
+				before = tips.date.split("-")[1] || after;
+			if ((after.split("/")[0] <= now.getMonth() + 1 && now.getMonth() + 1 <= before.split("/")[0]) && (after.split("/")[1] <= now.getDate() && now.getDate() <= before.split("/")[1])) {
+				let text = randomSelection(tips.text);
+				text = text.replace("{year}", now.getFullYear());
+				showMessage(text, 7000, true);
+				messageArray.push(text);
+			}
+		});
+	}
 
 	async function loadModelList() {
-		let response = await fetch(`${cdnPath}model_list.json`);
+		let response = await fetch(`${cdnPath}${listPath}`);
 		let result = await response.json();
 		modelList = result;
 	}
@@ -209,7 +256,11 @@ function loadWidget(config) {
 		showMessage(message, 4000, 10);
 		if (useCDN) {
 			if (!modelList) await loadModelList();
-			let target = randomSelection(modelList.models[modelId]);
+            if (!modelList.models[modelId]) localStorage.setItem("modelId", modelId = 1);
+		    localStorage.setItem("modelLocalId", modelList.models[modelId].id = Number(localStorage.getItem("modelLocalId")) || 0);
+			
+			let target = Array.isArray(modelList.models[modelId]) ? modelList.models[modelId][modelList.models[modelId].id >= modelList.models[modelId].length ? 0 : modelList.models[modelId].id] : modelList.models[modelId];
+			console.log(target);
 			loadlive2d("live2d", `${cdnPath}model/${target}/index.json`);
 		} else {
 			loadlive2d("live2d", `${apiPath}get/?id=${modelId}-${modelTexturesId}`);
@@ -217,27 +268,32 @@ function loadWidget(config) {
 		}
 	}
 
-	async function loadRandModel() {
+    async function loadRandTextures() {
 		let modelId = localStorage.getItem("modelId"),
-			modelTexturesId = localStorage.getItem("modelTexturesId");
+			modelTexturesId = localStorage.getItem("modelTexturesId"),
+			modelTextureMsg = rresult.waifu["load_rand_textures"],
+			modelTexturesRandMode = live2d_settings.modelTexturesRandMode;
 		if (useCDN) {
 			if (!modelList) await loadModelList();
-			let target = randomSelection(modelList.models[modelId]);
+			let target = modelTexturesRandMode === 'rand' ? randomSelection(modelList.models[modelId]) : switchSelection(modelList.models[modelId]);
+			console.log(target);
+			localStorage.setItem("modelLocalId", modelList.models[modelId].id);
 			loadlive2d("live2d", `${cdnPath}model/${target}/index.json`);
-			showMessage("我的新衣服好看嘛？", 4000, 10);
+			showMessage(modelTextureMsg[1], 4000, 10);
 		} else {
 			// 可选 "rand"(随机), "switch"(顺序)
-			fetch(`${apiPath}rand_textures/?id=${modelId}-${modelTexturesId}`)
+			fetch(`${apiPath}${modelTexturesRandMode}_textures/?id=${modelId}-${modelTexturesId}`)
 				.then(response => response.json())
 				.then(result => {
-					if (result.textures.id === 1 && (modelTexturesId === 1 || modelTexturesId === 0)) showMessage("我还没有其他衣服呢！", 4000, 10);
-					else loadModel(modelId, result.textures.id, "我的新衣服好看嘛？");
+					if (result.textures.id === 1 && (modelTexturesId === 1 || modelTexturesId === 0)) showMessage(modelTextureMsg[0], 4000, 10);
+					else loadModel(modelId, result.textures.id, modelTextureMsg[1]);
 				});
 		}
 	}
-
+	
 	async function loadOtherModel() {
 		let modelId = localStorage.getItem("modelId");
+		
 		if (useCDN) {
 			if (!modelList) await loadModelList();
 			let index = (++modelId >= modelList.models.length) ? 0 : modelId;
