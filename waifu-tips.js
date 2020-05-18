@@ -263,7 +263,7 @@ function loadWidget(config) {
 			console.log(target);
 			loadlive2d("live2d", `${cdnPath}model/${target}/index.json`);
 		} else {
-			loadlive2d("live2d", `${apiPath}get/?id=${modelId}-${modelTexturesId}`);
+			loadlive2d("live2d", `${apiPath}get/?json=${waifuPath}&id=${modelId}-${modelTexturesId}`);
 			console.log(`Live2D 模型 ${modelId}-${modelTexturesId} 加载完成`);
 		}
 	}
@@ -282,7 +282,7 @@ function loadWidget(config) {
 			showMessage(modelTextureMsg[1], 4000, 10);
 		} else {
 			// 可选 "rand"(随机), "switch"(顺序)
-			fetch(`${apiPath}${modelTexturesRandMode}_textures/?id=${modelId}-${modelTexturesId}`)
+			fetch(`${apiPath}${modelTexturesRandMode}_textures/?json=${waifuPath}&id=${modelId}-${modelTexturesId}`)
 				.then(response => response.json())
 				.then(result => {
 					if (result.textures.id === 1 && (modelTexturesId === 1 || modelTexturesId === 0)) showMessage(modelTextureMsg[0], 4000, 10);
@@ -299,7 +299,7 @@ function loadWidget(config) {
 			let index = (++modelId >= modelList.models.length) ? 0 : modelId;
 			loadModel(index, 0, modelList.messages[index]);
 		} else {
-			fetch(`${apiPath}switch/?id=${modelId}`)
+			fetch(`${apiPath}switch/?json=${waifuPath}&id=${modelId}`)
 				.then(response => response.json())
 				.then(result => {
 					loadModel(result.model.id, 0, result.model.message);
