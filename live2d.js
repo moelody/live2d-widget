@@ -4730,6 +4730,9 @@
 		if (e == h.default.PRIORITY_FORCE) this.mainMotionManager.setReservePriority(e);
 		else if (!this.mainMotionManager.reserveMotion(e)) return void(h.default.DEBUG_LOG && console.log("Motion is running."));
 		var o, n = this;
+        if (o = r.match(/\[(\d+)-(\d+)\]/)) {
+            r = r.replace(/\[(\d+)-(\d+)\]/, Math.ceil(Math.random() * Number(o[2])));
+        }
 		null == this.motions[t] ? this.loadMotion(null, this.modelHomeDir + r, function(r) {
 			o = r, n.setFadeInFadeOut(t, i, e, o)
 		}) : (o = this.motions[t], n.setFadeInFadeOut(t, i, e, o))
@@ -4738,7 +4741,7 @@
         	s = document.createElement("audio");
         if (!n) return;
         if (nums = n.match(/\[(\d+)-(\d+)\]/)) {
-            n = n.replace(/\[(\d+)-(\d+)\]/, Math.floor(Math.random() * Number(nums[2])));
+            n = n.replace(/\[(\d+)-(\d+)\]/, Math.ceil(Math.random() * Number(nums[2])));
         }
         s.src = this.modelHomeDir + n, h.default.DEBUG_LOG && console.log("Start sound : " + n), s.play(), this.mainMotionManager.startMotionPrio(r, e)
     }, o.prototype.setFadeInFadeOut = function(t, i, e, r) {
