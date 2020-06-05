@@ -34,10 +34,11 @@ if (screen.width >= 768) {
 		initWidget({
 			listPath: 'model_list_frontline',
 			waifuPath: live2d_path + "waifu-tips.json",
-			//apiPath: "https://live2d.fghrsh.net/api/",
-			apiPath: "https://live2d.moelody.com/",
-            cdnPath: 'https://cdn.jsdelivr.net/gh/moelody/live2d_api@latest/'
-			// cdnPath: "../live2d_api/"
+			apiPath: "https://live2d.fghrsh.net/api/",
+			// apiPath: "https://live2d.moelody.com/",
+            // cdnPath: 'https://cdn.jsdelivr.net/gh/moelody/live2d_api@latest/'
+            cdnPath: 'http://live2d.moelody.com/'
+			// cdnPath: "../live2d-api/"
 		});
 	});
 }

@@ -261,7 +261,8 @@ function loadWidget(config) {
 			
 			let target = Array.isArray(modelList.models[modelId]) ? modelList.models[modelId][modelList.models[modelId].id >= modelList.models[modelId].length ? 0 : modelList.models[modelId].id] : modelList.models[modelId];
             console.log(target);
-			loadlive2d("live2d", `${cdnPath}model/${target}/index.json`);
+			// loadlive2d("live2d", `${cdnPath}model/${target}/index.json`);
+			loadlive2d("live2d", `${cdnPath}${target}/index.json`);
 		} else {
 			loadlive2d("live2d", `${apiPath}get/?json=${listPath}&id=${modelId}-${modelTexturesId}`);
 			console.log(`Live2D 模型 ${modelId}-${modelTexturesId} 加载完成`);
@@ -278,7 +279,8 @@ function loadWidget(config) {
 			let target = modelTexturesRandMode === 'rand' ? randomSelection(modelList.models[modelId]) : switchSelection(modelList.models[modelId]);
 			console.log(target);
 			localStorage.setItem("modelLocalId", modelList.models[modelId].id);
-			loadlive2d("live2d", `${cdnPath}model/${target}/index.json`);
+			// loadlive2d("live2d", `${cdnPath}model/${target}/index.json`);
+			loadlive2d("live2d", `${cdnPath}${target}/index.json`);
 			showMessage(modelTextureMsg[1], 4000, 10);
 		} else {
 			// 可选 "rand"(随机), "switch"(顺序)
