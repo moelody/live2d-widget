@@ -37,7 +37,7 @@ if (screen.width >= 768) {
 			apiPath: "https://live2d.fghrsh.net/api/",
 			// apiPath: "https://live2d.moelody.com/",
             // cdnPath: 'https://cdn.jsdelivr.net/gh/moelody/live2d_api@latest/'
-            cdnPath: 'http://live2d.moelody.com/'
+            cdnPath: 'https://live2d.moelody.com/'
 			// cdnPath: "../live2d-api/"
 		});
 	});
