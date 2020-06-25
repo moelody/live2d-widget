@@ -3703,7 +3703,7 @@
 						default:
 							alert("profile _$6 _$Ui : " + t)
 					}
-					arguments.length < 2 && (i = !0), i && console.log("profile : " + t.PROFILE_NAME);
+					arguments.length < 2 && (i = 0), i && console.log("profile : " + t.PROFILE_NAME);
 					for (var e in t) at[e] = t[e], i && console.log("  [" + e + "] = " + t[e])
 				}, at.init = function() {
 					if (at._$6b) {

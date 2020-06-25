@@ -36,8 +36,8 @@ if (screen.width >= 768) {
 			waifuPath: live2d_path + "waifu-tips.json",
 			apiPath: "https://live2d.fghrsh.net/api/",
 			// apiPath: "https://live2d.moelody.com/",
-            cdnPath: 'https://cdn.jsdelivr.net/gh/moelody/live2d_api@latest/'
-            // cdnPath: 'https://live2d.moelody.com/'
+      cdnPath: 'https://cdn.jsdelivr.net/gh/moelody/live2d_api@latest/'
+      // cdnPath: 'https://live2d.moelody.com/'
 			// cdnPath: "../live2d-api/"
 		});
 	});
